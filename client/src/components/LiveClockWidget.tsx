@@ -38,7 +38,9 @@ export const LiveClockWidget: React.FC<LiveClockWidgetProps> = ({ todayRecord, o
     setLoading(true);
     setErrorMsg('');
     try {
-      const res = await api.attendance.checkIn(remarks || 'Web Portal Check-in');
+      const clientTime = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+      const clientDate = new Date().toLocaleDateString('en-CA'); // Local YYYY-MM-DD
+      const res = await api.attendance.checkIn(remarks || 'Web Portal Check-in', clientTime, clientDate);
       if (res.success) {
         confetti({
           particleCount: 80,
@@ -59,7 +61,9 @@ export const LiveClockWidget: React.FC<LiveClockWidgetProps> = ({ todayRecord, o
     setLoading(true);
     setErrorMsg('');
     try {
-      const res = await api.attendance.checkOut(8.25);
+      const clientTime = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+      const clientDate = new Date().toLocaleDateString('en-CA');
+      const res = await api.attendance.checkOut(clientTime, clientDate);
       if (res.success) {
         confetti({
           particleCount: 60,

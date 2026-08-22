@@ -19,15 +19,17 @@ const PORT = process.env.PORT || 5000;
 
 // Middlewares
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173'],
+  origin: true,
   credentials: true
 }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Request logger
+// Lightweight Request Logger (Skips high-frequency health probes for high concurrency)
 app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString().substring(11, 19)}] ${req.method} ${req.url}`);
+  if (process.env.NODE_ENV !== 'production' && !req.url.endsWith('/health')) {
+    console.log(`[${new Date().toISOString().substring(11, 19)}] ${req.method} ${req.url}`);
+  }
   next();
 });
 
@@ -74,10 +76,31 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success: false, message: 'Internal Server Error', error: err.message });
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`=========================================`);
   console.log(` 🚀 Dayflow HRMS Backend Engine Live`);
   console.log(` 🌐 Server URL: http://localhost:${PORT}`);
   console.log(` 🩺 Health Check: http://localhost:${PORT}/api/health`);
   console.log(`=========================================`);
 });
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.warn(`[Port ${PORT} Busy] Retrying port binding in 1s...`);
+    setTimeout(() => {
+      server.close();
+      server.listen(PORT);
+    }, 1000);
+  } else {
+    console.error('Server socket error:', err);
+  }
+});
+
+const cleanup = () => {
+  server.close(() => {
+    process.exit(0);
+  });
+};
+
+process.on('SIGTERM', cleanup);
+process.on('SIGINT', cleanup);

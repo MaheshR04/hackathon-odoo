@@ -59,11 +59,11 @@ export const api = {
   },
 
   attendance: {
-    getMy: () => request('/attendance/my'),
-    checkIn: (remarks?: string) =>
-      request('/attendance/check-in', { method: 'POST', body: JSON.stringify({ remarks }) }),
-    checkOut: (workingHours?: number) =>
-      request('/attendance/check-out', { method: 'POST', body: JSON.stringify({ workingHours }) }),
+    getMy: (date?: string) => request(`/attendance/my${date ? `?date=${date}` : ''}`),
+    checkIn: (remarks?: string, clientTime?: string, clientDate?: string) =>
+      request('/attendance/check-in', { method: 'POST', body: JSON.stringify({ remarks, clientTime, clientDate }) }),
+    checkOut: (clientTime?: string, clientDate?: string) =>
+      request('/attendance/check-out', { method: 'POST', body: JSON.stringify({ clientTime, clientDate }) }),
     getAll: (params?: { date?: string; department?: string; status?: string; search?: string }) =>
       request(`/attendance/all${buildQuery(params)}`),
     recordManual: (data: any) =>

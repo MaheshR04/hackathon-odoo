@@ -497,13 +497,15 @@ const getInitialSeed = () => {
 class DataStore {
   constructor() {
     this.data = null;
+    this.saveTimer = null;
+    this.isWriting = false;
     this.load();
   }
 
   load() {
     if (!fs.existsSync(DB_PATH)) {
       this.data = getInitialSeed();
-      this.save();
+      this.saveSync();
     } else {
       try {
         const raw = fs.readFileSync(DB_PATH, 'utf-8');
@@ -511,13 +513,50 @@ class DataStore {
       } catch (err) {
         console.error('Error reading database file, re-initializing seed:', err);
         this.data = getInitialSeed();
-        this.save();
+        this.saveSync();
       }
     }
   }
 
+  // High-performance debounced atomic async save
   save() {
-    fs.writeFileSync(DB_PATH, JSON.stringify(this.data, null, 2), 'utf-8');
+    if (this.saveTimer) return;
+    this.saveTimer = setTimeout(() => {
+      this.saveTimer = null;
+      this.flushToDisk();
+    }, 100); // 100ms batch write interval for high request throughput
+  }
+
+  saveSync() {
+    try {
+      fs.writeFileSync(DB_PATH, JSON.stringify(this.data, null, 2), 'utf-8');
+    } catch (err) {
+      console.error('Synchronous database write error:', err);
+    }
+  }
+
+  flushToDisk() {
+    if (this.isWriting) {
+      this.save(); // Retry next cycle
+      return;
+    }
+    this.isWriting = true;
+    const tempPath = `${DB_PATH}.tmp`;
+    const payload = JSON.stringify(this.data, null, 2);
+
+    fs.writeFile(tempPath, payload, 'utf-8', (err) => {
+      if (err) {
+        this.isWriting = false;
+        console.error('Async database write error:', err);
+        return;
+      }
+      fs.rename(tempPath, DB_PATH, (renameErr) => {
+        this.isWriting = false;
+        if (renameErr) {
+          console.error('Database file swap error:', renameErr);
+        }
+      });
+    });
   }
 
   // Generic helpers

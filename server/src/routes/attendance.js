@@ -24,7 +24,7 @@ router.get('/my', authenticateToken, (req, res) => {
     // Sort descending by date
     userAttendance.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-    const today = getTodayDate();
+    const today = req.query.date || getTodayDate();
     const todayRecord = userAttendance.find(a => a.date === today) || null;
 
     // Compute basic stats
@@ -56,8 +56,8 @@ router.get('/my', authenticateToken, (req, res) => {
 // Check-in (Employee)
 router.post('/check-in', authenticateToken, (req, res) => {
   try {
-    const today = getTodayDate();
-    const currentTime = getFormattedTime();
+    const today = req.body.clientDate || getTodayDate();
+    const currentTime = req.body.clientTime || getFormattedTime();
     const attendance = db.getCollection('attendance');
 
     let record = attendance.find(a => a.employeeId === req.user.id && a.date === today);
@@ -68,6 +68,7 @@ router.post('/check-in', authenticateToken, (req, res) => {
 
     if (record) {
       record.checkIn = currentTime;
+      record.checkInTimestamp = Date.now();
       record.status = 'Present';
       record.remarks = req.body.remarks || 'Checked in via Web Portal';
     } else {
@@ -77,6 +78,7 @@ router.post('/check-in', authenticateToken, (req, res) => {
         employeeName: req.user.name,
         date: today,
         checkIn: currentTime,
+        checkInTimestamp: Date.now(),
         checkOut: null,
         workingHours: 0,
         status: 'Present',
@@ -101,8 +103,8 @@ router.post('/check-in', authenticateToken, (req, res) => {
 // Check-out (Employee)
 router.post('/check-out', authenticateToken, (req, res) => {
   try {
-    const today = getTodayDate();
-    const currentTime = getFormattedTime();
+    const today = req.body.clientDate || getTodayDate();
+    const currentTime = req.body.clientTime || getFormattedTime();
     const attendance = db.getCollection('attendance');
 
     const record = attendance.find(a => a.employeeId === req.user.id && a.date === today);
@@ -117,9 +119,17 @@ router.post('/check-out', authenticateToken, (req, res) => {
 
     record.checkOut = currentTime;
 
-    // Approximate hours calculation based on mock or real elapsed time
-    const calcHours = Number(req.body.workingHours) || 8.25;
-    record.workingHours = calcHours;
+    // Calculate actual elapsed hours if checkInTimestamp is available
+    let calcHours = 0;
+    if (record.checkInTimestamp) {
+      const diffMs = Date.now() - record.checkInTimestamp;
+      calcHours = Number((diffMs / (1000 * 60 * 60)).toFixed(2));
+    } else {
+      calcHours = Number(req.body.workingHours) || 0.5;
+    }
+    
+    // Ensure minimum 0.01 hours
+    record.workingHours = Math.max(0.01, calcHours);
 
     if (calcHours < 5 && record.status === 'Present') {
       record.status = 'Half-day';
