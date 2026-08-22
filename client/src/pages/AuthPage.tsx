@@ -192,9 +192,11 @@ export const AuthPage: React.FC = () => {
                     setErrorMsg('');
                     setSuccessMsg('');
                   }}
-                  className="p-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white transition"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold transition border border-slate-700/60"
+                  title="Return to Sign In"
                 >
                   <ArrowLeft className="h-4 w-4" />
+                  <span>Back to Sign In</span>
                 </button>
                 <div>
                   <h3 className="text-lg font-bold text-white flex items-center gap-2">
@@ -249,6 +251,20 @@ export const AuthPage: React.FC = () => {
                     <span>{loading ? 'Dispatching Reset Email...' : 'Send Password Reset Code'}</span>
                     <ArrowRight className="h-4 w-4" />
                   </button>
+
+                  <div className="text-center pt-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsForgot(false);
+                        setErrorMsg('');
+                        setSuccessMsg('');
+                      }}
+                      className="text-xs text-purple-400 hover:text-purple-300 font-semibold"
+                    >
+                      ← Cancel & Return to Sign In
+                    </button>
+                  </div>
                 </form>
               ) : (
                 /* Step 2: Enter OTP & New Password */
@@ -307,6 +323,20 @@ export const AuthPage: React.FC = () => {
                     >
                       <span>{loading ? 'Resetting Password...' : 'Reset Password & Sign In'}</span>
                       <ArrowRight className="h-4 w-4" />
+                    </button>
+                  </div>
+
+                  <div className="text-center pt-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsForgot(false);
+                        setErrorMsg('');
+                        setSuccessMsg('');
+                      }}
+                      className="text-xs text-purple-400 hover:text-purple-300 font-semibold"
+                    >
+                      ← Cancel & Return to Sign In
                     </button>
                   </div>
                 </form>

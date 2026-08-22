@@ -14,6 +14,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProfile }) => {
   const [showNotifs, setShowNotifs] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
+
   // Theme Mode (Dark / Light)
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     return (localStorage.getItem('dayflow_theme') as 'dark' | 'light') || 'dark';
@@ -27,6 +29,22 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProfile }) => {
     }
     localStorage.setItem('dayflow_theme', theme);
   }, [theme]);
+
+  // Click outside listener for profile dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+    };
+
+    if (showDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showDropdown]);
 
   const fetchUnread = async () => {
     try {
@@ -104,7 +122,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProfile }) => {
             </button>
 
             {/* User Profile dropdown */}
-            <div className="relative">
+            <div ref={dropdownRef} className="relative">
               <button
                 onClick={() => setShowDropdown(!showDropdown)}
                 className="flex items-center gap-3 pl-2 pr-1 py-1 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-800/80 transition"
