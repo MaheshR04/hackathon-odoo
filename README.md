@@ -1,6 +1,11 @@
 # 🏢 Dayflow - Human Resource Management System (HRMS)
 > *"Every workday, perfectly aligned."*
 
+🌐 **Live Production Application**: **[https://dayflow-app.onrender.com](https://dayflow-app.onrender.com)**  
+📦 **GitHub Repository**: **[https://github.com/MaheshR04/hackathon-odoo.git](https://github.com/MaheshR04/hackathon-odoo.git)**
+
+---
+
 Dayflow HRMS is a modern, fullstack Human Resource Management System built for the Hackathon. It streamlines core HR operations: employee onboarding, 360° profile dossiers, live shift clocking & attendance tracking, leave applications & review workflows, itemized compensation management with PDF payslip generation, and interactive executive analytics.
 
 ---
@@ -47,7 +52,20 @@ Dayflow HRMS is a modern, fullstack Human Resource Management System built for t
 
 ---
 
-## 🚀 Quick Start Guide
+## 🔑 Pre-Configured Test Credentials
+
+| Persona | Role | Email | Password |
+| :--- | :--- | :--- | :--- |
+| **Sarah Connor** | HR Admin / Officer | `sarah.admin@dayflow.com` | `admin123` |
+| **Alex Rivera** | Senior Full Stack Engineer | `alex.rivera@dayflow.com` | `emp123` |
+| **Elena Rostova** | Lead UI/UX Designer | `elena.rostova@dayflow.com` | `emp123` |
+| **David Chen** | DevOps Architect | `david.chen@dayflow.com` | `emp123` |
+
+*(You can also simply click the "Switch Persona" button in the Navbar or the 1-Click Demo buttons on the Login page!)*
+
+---
+
+## 🚀 Quick Start Guide (Local Setup)
 
 ### Prerequisites
 - **Node.js**: v18+ (Tested on v25.2.1)
@@ -63,20 +81,7 @@ npm run install-all
 npm run dev
 ```
 
-Open your browser at **[http://localhost:5173](http://localhost:5173)**.
-
----
-
-## 🔑 Pre-Configured Test Credentials
-
-| Persona | Role | Email | Password |
-| :--- | :--- | :--- | :--- |
-| **Sarah Connor** | HR Admin / Officer | `sarah.admin@dayflow.com` | `admin123` |
-| **Alex Rivera** | Senior Full Stack Engineer | `alex.rivera@dayflow.com` | `emp123` |
-| **Elena Rostova** | Lead UI/UX Designer | `elena.rostova@dayflow.com` | `emp123` |
-| **David Chen** | DevOps Architect | `david.chen@dayflow.com` | `emp123` |
-
-*(You can also simply click the "Switch Persona" button in the Navbar or the 1-Click Demo buttons on the Login page!)*
+Open your browser at **[http://localhost:5173](http://localhost:5173)** or visit the live app at **[https://dayflow-app.onrender.com](https://dayflow-app.onrender.com)**.
 
 ---
 
