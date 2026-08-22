@@ -30,11 +30,11 @@ oodo/
 │   │   ├── context/
 │   │   │   └── AuthContext.tsx       # Authentication & User Session Provider
 │   │   ├── pages/
-│   │   │   ├── AnalyticsPage.tsx     # Business Intelligence & Charts
+│   │   │   ├── AnalyticsPage.tsx     # Workforce Intelligence, Charts & Skeleton State
 │   │   │   ├── AttendancePage.tsx    # Shift Logs & CSV Export
 │   │   │   ├── AuthPage.tsx          # Sign In, Sign Up, & 2-Step OTP Recovery
 │   │   │   ├── DashboardPage.tsx     # Role-Based Workspaces
-│   │   │   ├── EmployeesPage.tsx     # Employee Directory & Activation Toggle
+│   │   │   ├── EmployeesPage.tsx     # Employee Directory & Instant Activation Toggle
 │   │   │   ├── LeavesPage.tsx        # Time-Off Approvals & History
 │   │   │   ├── PayrollPage.tsx       # Salary Disbursement & Batch Payroll
 │   │   │   └── ProfilePage.tsx       # 360° Dossier & Account Deactivation
@@ -55,7 +55,7 @@ oodo/
 │   │   ├── middleware/
 │   │   │   └── auth.js               # JWT Token Verification & RBAC Guards
 │   │   ├── routes/
-│   │   │   ├── analytics.js          # Executive Metrics Routes
+│   │   │   ├── analytics.js          # Company Workforce Intelligence Route (All Roles)
 │   │   │   ├── attendance.js         # Live Shift & Ticker Endpoints
 │   │   │   ├── auth.js               # Sign In, Sign Up, OTP & Admin Checks
 │   │   │   ├── employees.js          # Employee Dossier & Status Routes
@@ -85,30 +85,34 @@ oodo/
 ### 1. **Single HR Admin Role & Account Security**
 - **Sole HR Admin**: Assigned exclusively to **`HR` (`hr@gmail.com`)**.
 - **Registration Safeguard**: When an HR Admin account exists, duplicate HR account creation is automatically disabled across Registration (`AuthPage.tsx`) and Onboarding (`AddEmployeeModal.tsx`).
-- **Account Activation / Deactivation**: HR Admin can activate or deactivate any employee account directly from `ProfilePage.tsx` or `EmployeesPage.tsx`. Deactivated accounts are blocked on login with **HTTP 403 Forbidden**.
+- **Instant Account Activation / Deactivation**: HR Admin can activate or deactivate any employee account directly from `ProfilePage.tsx` or `EmployeesPage.tsx` with **0ms optimistic UI feedback**. Deactivated accounts are blocked on login with **HTTP 403 Forbidden**.
 
-### 2. **2-Step Password Recovery (Forgot Password & Email OTP)**
+### 2. **Workforce Analytics & Telemetry (Accessible to All Roles)**
+- **Role-Appropriate Intelligence**: Available to all authenticated employees and HR Admins with instant animated skeleton loading states.
+- **Interactive Visualizations**: 7-day attendance area chart, department headcount progress indicators, leave category pie distribution, and department payroll investment metrics.
+
+### 3. **2-Step Password Recovery (Forgot Password & Email OTP)**
 - **Password Reset Request**: Users enter their registered email address or Employee ID on the login screen.
 - **6-Digit OTP Verification**: Generates a 15-minute valid 6-digit OTP code dispatched to the registered email address and system notifications.
 - **Secure Password Update**: Encrypts new passwords using `bcryptjs` (10 salt rounds) and updates data storage atomically.
 
-### 3. **Dark / Light Mode Theme System**
+### 4. **Dark / Light Mode Theme System**
 - High-contrast, modern Dark / Light mode toggle in `Navbar.tsx` with `localStorage` persistence.
 - Premium CSS variable system in `client/src/index.css` supporting readable text, glowing inputs, crisp borders, and soft shadows.
 
-### 4. **Live Shift Clock & Attendance Management**
+### 5. **Live Shift Clock & Attendance Management**
 - Interactive Check-In / Check-Out ticker with precise timestamp synchronization and working hours calculation.
 - Daily/weekly attendance logs with date filtering, status tags (`Present`, `Absent`, `Half-day`, `On Leave`), and CSV audit export.
 
-### 5. **Time-Off Applications & HR Review Hub**
+### 6. **Time-Off Applications & HR Review Hub**
 - Category selection (`Paid`, `Sick`, `Unpaid`), automatic duration calculation, and instant balance deduction upon HR approval.
 - Admin Review Hub for one-click **Approve / Reject** decisions with custom HR feedback.
 
-### 6. **Itemized Payroll & Official PDF Payslip Generator**
+### 7. **Itemized Payroll & Official PDF Payslip Generator**
 - Itemized salary components: Basic, HRA (40%), Special Allowance, Bonus, PF (12%), Professional Tax, and Income Tax TDS (8%).
 - Computer-generated official PDF payslips with direct **Download PDF** and **Print** capabilities.
 
-### 7. **High-Concurrency Performance & Docker Support**
+### 8. **High-Concurrency Performance & Docker Support**
 - Non-blocking 100ms debounced atomic file persistence (`fs.writeFile` to `.tmp` + `fs.rename`) handling 1,000+ parallel API calls with 0% error rate.
 - Multi-stage Docker containerization with volume mount persistence (`./server/data:/app/server/data`).
 
