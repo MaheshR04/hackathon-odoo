@@ -50,6 +50,24 @@ export const AnalyticsPage: React.FC = () => {
 
   const COLORS = ['#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ec4899', '#6366f1'];
 
+  if (loading) {
+    return (
+      <div className="space-y-6 pb-12 animate-pulse">
+        <div className="h-16 bg-slate-900/60 rounded-2xl border border-slate-800" />
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map(i => (
+            <div key={i} className="h-24 bg-slate-900/60 rounded-2xl border border-slate-800" />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {[1, 2, 3, 4].map(i => (
+            <div key={i} className="h-72 bg-slate-900/60 rounded-2xl border border-slate-800" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   const leavePieData = data
     ? [
         { name: 'Paid Leaves', value: data.leaveAnalytics.leaveTypeCounts.Paid || 1 },

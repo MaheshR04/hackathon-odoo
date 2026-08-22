@@ -4,13 +4,15 @@ import { authenticateToken, requireAdmin } from '../middleware/auth.js';
 
 const router = express.Router();
 
-// Get aggregated company HR analytics
-router.get('/dashboard', authenticateToken, requireAdmin, (req, res) => {
+// Get aggregated company HR analytics (Accessible by all authenticated employees)
+router.get('/dashboard', authenticateToken, (req, res) => {
   try {
     const employees = db.getCollection('employees');
     const attendance = db.getCollection('attendance');
     const leaves = db.getCollection('leaves');
     const payroll = db.getCollection('payrollHistory');
+
+    const isAdmin = req.user.role === 'admin';
 
     // 1. Department Breakdown
     const deptMap = {};
