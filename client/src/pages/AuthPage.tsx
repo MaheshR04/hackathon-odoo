@@ -105,41 +105,6 @@ export const AuthPage: React.FC = () => {
               ))}
             </div>
           </div>
-
-          {/* Quick Demo Persona Launcher */}
-          <div className="mt-10 pt-6 border-t border-slate-800">
-            <p className="text-[11px] font-bold uppercase tracking-wider text-purple-300 flex items-center gap-1.5 mb-3">
-              <Sparkles className="h-3.5 w-3.5 text-purple-400" />
-              <span>Instant 1-Click Demo Login</span>
-            </p>
-            <div className="grid grid-cols-2 gap-2.5">
-              <button
-                type="button"
-                onClick={() => quickLoginDemo('admin')}
-                className="flex flex-col items-start p-2.5 rounded-xl border border-purple-500/30 bg-purple-500/10 hover:bg-purple-500/20 text-left transition group active:scale-95"
-              >
-                <span className="text-xs font-bold text-white group-hover:text-purple-300">
-                  Sarah Connor
-                </span>
-                <span className="text-[10px] text-purple-400 font-semibold mt-0.5">
-                  HR Admin / Officer
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => quickLoginDemo('employee', 'EMP-002')}
-                className="flex flex-col items-start p-2.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-left transition group active:scale-95"
-              >
-                <span className="text-xs font-bold text-white group-hover:text-emerald-300">
-                  Alex Rivera
-                </span>
-                <span className="text-[10px] text-emerald-400 font-semibold mt-0.5">
-                  Senior Engineer
-                </span>
-              </button>
-            </div>
-          </div>
         </div>
 
         {/* Right Side: Auth Forms */}
@@ -193,7 +158,7 @@ export const AuthPage: React.FC = () => {
                   type="text"
                   value={emailOrId}
                   onChange={e => setEmailOrId(e.target.value)}
-                  placeholder="e.g. sarah.admin@dayflow.com or EMP-001"
+                  placeholder="Enter email or Employee ID"
                   required
                   className="w-full px-4 py-3 rounded-xl border border-slate-700/80 bg-slate-900 text-white text-xs placeholder-slate-500 focus:border-purple-500 focus:outline-none transition shadow-inner"
                 />
@@ -228,16 +193,6 @@ export const AuthPage: React.FC = () => {
                   <input type="checkbox" defaultChecked className="rounded border-slate-700 text-purple-600 focus:ring-purple-500" />
                   <span>Remember my session</span>
                 </label>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEmailOrId('sarah.admin@dayflow.com');
-                    setPassword('admin123');
-                  }}
-                  className="text-purple-400 hover:text-purple-300 font-semibold"
-                >
-                  Fill Admin Demo
-                </button>
               </div>
 
               <button

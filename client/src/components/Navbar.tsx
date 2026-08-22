@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, User, LogOut, Shield, ChevronDown, Sparkles, RefreshCw } from 'lucide-react';
+import { Bell, User, LogOut, Shield, ChevronDown, Sun, Moon } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { NotificationDrawer } from './NotificationDrawer';
@@ -9,11 +9,24 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ onOpenProfile }) => {
-  const { user, logout, quickLoginDemo } = useAuth();
+  const { user, logout } = useAuth();
   const [showDropdown, setShowDropdown] = useState(false);
-  const [showDemoMenu, setShowDemoMenu] = useState(false);
   const [showNotifs, setShowNotifs] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+
+  // Theme Mode (Dark / Light)
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    return (localStorage.getItem('dayflow_theme') as 'dark' | 'light') || 'dark';
+  });
+
+  useEffect(() => {
+    if (theme === 'light') {
+      document.documentElement.classList.add('light-mode');
+    } else {
+      document.documentElement.classList.remove('light-mode');
+    }
+    localStorage.setItem('dayflow_theme', theme);
+  }, [theme]);
 
   const fetchUnread = async () => {
     try {
@@ -56,74 +69,26 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProfile }) => {
             </div>
           </div>
 
-          {/* Right: Quick Demo Switcher + Notifications + User Menu */}
+          {/* Right: Theme Toggle + Notifications + User Menu */}
           <div className="flex items-center gap-3">
-            {/* Quick Demo Role Switcher (Hackathon Favorite) */}
-            <div className="relative">
-              <button
-                onClick={() => setShowDemoMenu(!showDemoMenu)}
-                className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl border border-indigo-500/30 bg-indigo-500/10 hover:bg-indigo-500/20 text-xs font-semibold text-indigo-300 transition shadow-sm"
-              >
-                <Sparkles className="h-3.5 w-3.5 text-indigo-400" />
-                <span>Switch Persona</span>
-                <ChevronDown className="h-3 w-3 text-indigo-400" />
-              </button>
-
-              {showDemoMenu && (
-                <div className="absolute right-0 mt-2 w-64 rounded-xl border border-slate-700 bg-slate-900/95 p-2 shadow-2xl backdrop-blur-xl z-50">
-                  <p className="px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                    Switch Test Persona
-                  </p>
-                  <button
-                    onClick={() => {
-                      quickLoginDemo('admin');
-                      setShowDemoMenu(false);
-                    }}
-                    className="w-full flex items-center gap-3 px-3 py-2 text-xs text-left rounded-lg text-slate-200 hover:bg-purple-500/10 hover:text-purple-300 transition"
-                  >
-                    <div className="h-7 w-7 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-xs">
-                      SC
-                    </div>
-                    <div>
-                      <p className="font-semibold text-white">Sarah Connor</p>
-                      <p className="text-[10px] text-purple-400">HR Admin / Officer</p>
-                    </div>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      quickLoginDemo('employee', 'EMP-002');
-                      setShowDemoMenu(false);
-                    }}
-                    className="w-full flex items-center gap-3 px-3 py-2 text-xs text-left rounded-lg text-slate-200 hover:bg-emerald-500/10 hover:text-emerald-300 transition"
-                  >
-                    <div className="h-7 w-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs">
-                      AR
-                    </div>
-                    <div>
-                      <p className="font-semibold text-white">Alex Rivera</p>
-                      <p className="text-[10px] text-emerald-400">Senior Engineer (Employee)</p>
-                    </div>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      quickLoginDemo('employee', 'EMP-003');
-                      setShowDemoMenu(false);
-                    }}
-                    className="w-full flex items-center gap-3 px-3 py-2 text-xs text-left rounded-lg text-slate-200 hover:bg-teal-500/10 hover:text-teal-300 transition"
-                  >
-                    <div className="h-7 w-7 rounded-full bg-teal-500/20 text-teal-400 flex items-center justify-center font-bold text-xs">
-                      ER
-                    </div>
-                    <div>
-                      <p className="font-semibold text-white">Elena Rostova</p>
-                      <p className="text-[10px] text-teal-400">Lead UX Designer (Employee)</p>
-                    </div>
-                  </button>
-                </div>
+            {/* Dark / Light Theme Mode Toggle */}
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-800/80 text-xs font-semibold text-slate-300 hover:text-white transition shadow-sm"
+              title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+            >
+              {theme === 'dark' ? (
+                <>
+                  <Sun className="h-4 w-4 text-amber-400" />
+                  <span className="hidden sm:inline text-amber-300">Light Mode</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="h-4 w-4 text-indigo-500" />
+                  <span className="hidden sm:inline text-indigo-600 font-bold">Dark Mode</span>
+                </>
               )}
-            </div>
+            </button>
 
             {/* Notification Bell */}
             <button
