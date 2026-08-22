@@ -29,8 +29,8 @@
         "paid": 18,
         "usedPaid": 3,
         "sick": 12,
-        "usedSick": 1,
-        "unpaid": 0
+        "usedSick": 4,
+        "unpaid": 3
       },
       "documents": [
         {
@@ -332,6 +332,28 @@
   ],
   "attendance": [
     {
+      "id": "att-leave-1787385304657-2026-08-24",
+      "employeeId": "EMP-001",
+      "employeeName": "Sarah Connor",
+      "date": "2026-08-24",
+      "checkIn": null,
+      "checkOut": null,
+      "workingHours": 0,
+      "status": "Leave",
+      "remarks": "Approved Sick Leave"
+    },
+    {
+      "id": "att-leave-1787385304657-2026-08-23",
+      "employeeId": "EMP-001",
+      "employeeName": "Sarah Connor",
+      "date": "2026-08-23",
+      "checkIn": null,
+      "checkOut": null,
+      "workingHours": 0,
+      "status": "Leave",
+      "remarks": "Approved Sick Leave"
+    },
+    {
       "id": "att-leave-1787383311912-2026-09-12",
       "employeeId": "EMP-002",
       "employeeName": "Alex Rivera",
@@ -438,8 +460,8 @@
       "checkIn": "08:45 AM",
       "checkOut": "01:01 PM",
       "workingHours": 8.25,
-      "status": "Present",
-      "remarks": "HR Admin early check-in"
+      "status": "Leave",
+      "remarks": "Approved Sick Leave"
     },
     {
       "id": "att-202",
@@ -543,6 +565,21 @@
   ],
   "leaves": [
     {
+      "id": "leave-1787385563757",
+      "employeeId": "EMP-002",
+      "employeeName": "Alex Rivera",
+      "department": "Engineering",
+      "leaveType": "Sick",
+      "startDate": "2026-08-22",
+      "endDate": "2026-08-22",
+      "totalDays": 1,
+      "reason": "not able to come to office",
+      "status": "Rejected",
+      "adminComments": "noo you should come",
+      "appliedAt": "2026-08-22 07:59:23",
+      "reviewedAt": "2026-08-22 07:59:56"
+    },
+    {
       "id": "leave-1787385083168",
       "employeeId": "EMP-002",
       "employeeName": "Alex Rivera",
@@ -567,10 +604,10 @@
       "endDate": "2026-08-24",
       "totalDays": 3,
       "reason": "health issues",
-      "status": "Pending",
-      "adminComments": "",
+      "status": "Approved",
+      "adminComments": "take care",
       "appliedAt": "2026-08-22 07:47:38",
-      "reviewedAt": null
+      "reviewedAt": "2026-08-22 07:55:04"
     },
     {
       "id": "leave-1787384847340",
@@ -582,10 +619,10 @@
       "endDate": "2026-08-24",
       "totalDays": 3,
       "reason": "health issues",
-      "status": "Pending",
-      "adminComments": "",
+      "status": "Approved",
+      "adminComments": "take care",
       "appliedAt": "2026-08-22 07:47:27",
-      "reviewedAt": null
+      "reviewedAt": "2026-08-22 07:55:39"
     },
     {
       "id": "leave-1787383653978",
@@ -784,6 +821,42 @@
     }
   ],
   "notifications": [
+    {
+      "id": "notif-1787385596806",
+      "recipientId": "EMP-002",
+      "title": "Leave Request Rejected",
+      "message": "Your Sick Leave (2026-08-22 to 2026-08-22) has been rejected by HR. Remarks: \"noo you should come\"",
+      "type": "leave_rejected",
+      "read": false,
+      "timestamp": "2026-08-22 07:59:56"
+    },
+    {
+      "id": "notif-1787385563760-EMP-001",
+      "recipientId": "EMP-001",
+      "title": "New Leave Application",
+      "message": "Alex Rivera submitted a 1-day Sick Leave request for 2026-08-22.",
+      "type": "leave_request",
+      "read": false,
+      "timestamp": "2026-08-22 07:59:23"
+    },
+    {
+      "id": "notif-1787385339059",
+      "recipientId": "EMP-001",
+      "title": "Leave Request Approved",
+      "message": "Your Sick Leave (2026-08-22 to 2026-08-24) has been approved by HR. Remarks: \"take care\"",
+      "type": "leave_approved",
+      "read": false,
+      "timestamp": "2026-08-22 07:55:39"
+    },
+    {
+      "id": "notif-1787385304660",
+      "recipientId": "EMP-001",
+      "title": "Leave Request Approved",
+      "message": "Your Unpaid Leave (2026-08-22 to 2026-08-24) has been approved by HR. Remarks: \"take care\"",
+      "type": "leave_approved",
+      "read": false,
+      "timestamp": "2026-08-22 07:55:04"
+    },
     {
       "id": "notif-1787385083178",
       "recipientId": "EMP-002",
