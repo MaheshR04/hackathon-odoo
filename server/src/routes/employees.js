@@ -31,20 +31,20 @@ router.get('/', authenticateToken, (req, res) => {
       return safe;
     });
 
-    if (department && department !== 'all') {
+    if (department && department !== 'all' && department !== 'undefined' && department !== '') {
       results = results.filter(e => e.department.toLowerCase() === department.toLowerCase());
     }
 
-    if (status && status !== 'all') {
+    if (status && status !== 'all' && status !== 'undefined' && status !== '') {
       results = results.filter(e => e.employmentStatus.toLowerCase() === status.toLowerCase());
     }
 
-    if (role && role !== 'all') {
+    if (role && role !== 'all' && role !== 'undefined' && role !== '') {
       results = results.filter(e => e.role.toLowerCase() === role.toLowerCase());
     }
 
-    if (search) {
-      const query = search.toLowerCase();
+    if (search && search !== 'undefined' && search.trim() !== '') {
+      const query = search.toLowerCase().trim();
       results = results.filter(
         e => e.name.toLowerCase().includes(query) ||
              e.email.toLowerCase().includes(query) ||

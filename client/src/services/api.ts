@@ -8,6 +8,18 @@ const getAuthHeaders = () => {
   };
 };
 
+const buildQuery = (params?: Record<string, any>) => {
+  if (!params) return '';
+  const cleanParams: Record<string, string> = {};
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && value !== null && value !== '' && value !== 'all' && value !== 'undefined') {
+      cleanParams[key] = String(value);
+    }
+  }
+  const query = new URLSearchParams(cleanParams).toString();
+  return query ? `?${query}` : '';
+};
+
 async function request(endpoint: string, options: RequestInit = {}) {
   const url = `${API_BASE}${endpoint}`;
   const response = await fetch(url, {
@@ -35,10 +47,8 @@ export const api = {
   },
 
   employees: {
-    getAll: (params?: { department?: string; status?: string; role?: string; search?: string }) => {
-      const query = new URLSearchParams(params as any).toString();
-      return request(`/employees${query ? `?${query}` : ''}`);
-    },
+    getAll: (params?: { department?: string; status?: string; role?: string; search?: string }) =>
+      request(`/employees${buildQuery(params)}`),
     getById: (id: string) => request(`/employees/${id}`),
     create: (data: any) => request('/employees', { method: 'POST', body: JSON.stringify(data) }),
     update: (id: string, data: any) => request(`/employees/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
@@ -54,10 +64,8 @@ export const api = {
       request('/attendance/check-in', { method: 'POST', body: JSON.stringify({ remarks }) }),
     checkOut: (workingHours?: number) =>
       request('/attendance/check-out', { method: 'POST', body: JSON.stringify({ workingHours }) }),
-    getAll: (params?: { date?: string; department?: string; status?: string; search?: string }) => {
-      const query = new URLSearchParams(params as any).toString();
-      return request(`/attendance/all${query ? `?${query}` : ''}`);
-    },
+    getAll: (params?: { date?: string; department?: string; status?: string; search?: string }) =>
+      request(`/attendance/all${buildQuery(params)}`),
     recordManual: (data: any) =>
       request('/attendance/manual', { method: 'POST', body: JSON.stringify(data) })
   },
@@ -66,20 +74,16 @@ export const api = {
     getMy: () => request('/leaves/my'),
     apply: (data: { leaveType: string; startDate: string; endDate: string; reason: string }) =>
       request('/leaves/apply', { method: 'POST', body: JSON.stringify(data) }),
-    getAll: (params?: { status?: string; leaveType?: string; department?: string; search?: string }) => {
-      const query = new URLSearchParams(params as any).toString();
-      return request(`/leaves/all${query ? `?${query}` : ''}`);
-    },
+    getAll: (params?: { status?: string; leaveType?: string; department?: string; search?: string }) =>
+      request(`/leaves/all${buildQuery(params)}`),
     updateStatus: (id: string, data: { status: 'Approved' | 'Rejected'; adminComments?: string }) =>
       request(`/leaves/${id}/status`, { method: 'PUT', body: JSON.stringify(data) })
   },
 
   payroll: {
     getMy: () => request('/payroll/my'),
-    getAll: (params?: { department?: string; search?: string; month?: string }) => {
-      const query = new URLSearchParams(params as any).toString();
-      return request(`/payroll/all${query ? `?${query}` : ''}`);
-    },
+    getAll: (params?: { department?: string; search?: string; month?: string }) =>
+      request(`/payroll/all${buildQuery(params)}`),
     updateStructure: (employeeId: string, structure: any) =>
       request(`/payroll/structure/${employeeId}`, { method: 'PUT', body: JSON.stringify(structure) }),
     generateBatch: (data: { month?: string; payPeriod?: string }) =>

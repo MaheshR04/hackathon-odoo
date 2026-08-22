@@ -155,20 +155,20 @@ router.get('/all', authenticateToken, requireAdmin, (req, res) => {
       };
     });
 
-    if (date) {
+    if (date && date !== 'all' && date !== 'undefined' && date !== '') {
       results = results.filter(a => a.date === date);
     }
 
-    if (department && department !== 'all') {
+    if (department && department !== 'all' && department !== 'undefined' && department !== '') {
       results = results.filter(a => a.department.toLowerCase() === department.toLowerCase());
     }
 
-    if (status && status !== 'all') {
+    if (status && status !== 'all' && status !== 'undefined' && status !== '') {
       results = results.filter(a => a.status.toLowerCase() === status.toLowerCase());
     }
 
-    if (search) {
-      const q = search.toLowerCase();
+    if (search && search !== 'undefined' && search.trim() !== '') {
+      const q = search.toLowerCase().trim();
       results = results.filter(
         a => a.employeeName.toLowerCase().includes(q) ||
              a.employeeId.toLowerCase().includes(q) ||

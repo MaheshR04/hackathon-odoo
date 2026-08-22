@@ -66,12 +66,12 @@ router.get('/all', authenticateToken, requireAdmin, (req, res) => {
       };
     });
 
-    if (department && department !== 'all') {
+    if (department && department !== 'all' && department !== 'undefined' && department !== '') {
       employeePayrolls = employeePayrolls.filter(e => e.department.toLowerCase() === department.toLowerCase());
     }
 
-    if (search) {
-      const q = search.toLowerCase();
+    if (search && search !== 'undefined' && search.trim() !== '') {
+      const q = search.toLowerCase().trim();
       employeePayrolls = employeePayrolls.filter(
         e => e.name.toLowerCase().includes(q) ||
              e.employeeId.toLowerCase().includes(q) ||

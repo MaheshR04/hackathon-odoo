@@ -83,7 +83,7 @@
       },
       "leaveBalances": {
         "paid": 18,
-        "usedPaid": 7,
+        "usedPaid": 10,
         "sick": 10,
         "usedSick": 2,
         "unpaid": 0
@@ -340,7 +340,7 @@
       "checkOut": null,
       "workingHours": 0,
       "status": "Leave",
-      "remarks": "Approved Paid Leave: Tech Conference & Professional Workshop"
+      "remarks": "Approved Paid Leave"
     },
     {
       "id": "att-leave-1787383311912-2026-09-11",
@@ -351,7 +351,7 @@
       "checkOut": null,
       "workingHours": 0,
       "status": "Leave",
-      "remarks": "Approved Paid Leave: Tech Conference & Professional Workshop"
+      "remarks": "Approved Paid Leave"
     },
     {
       "id": "att-leave-1787383311912-2026-09-10",
@@ -362,7 +362,7 @@
       "checkOut": null,
       "workingHours": 0,
       "status": "Leave",
-      "remarks": "Approved Paid Leave: Tech Conference & Professional Workshop"
+      "remarks": "Approved Paid Leave"
     },
     {
       "id": "att-101",
@@ -542,6 +542,51 @@
     }
   ],
   "leaves": [
+    {
+      "id": "leave-1787385083168",
+      "employeeId": "EMP-002",
+      "employeeName": "Alex Rivera",
+      "department": "Engineering",
+      "leaveType": "Paid",
+      "startDate": "2026-09-10",
+      "endDate": "2026-09-12",
+      "totalDays": 3,
+      "reason": "Tech Conference & Professional Workshop",
+      "status": "Approved",
+      "adminComments": "Approved by HR Operations. Enjoy the workshop!",
+      "appliedAt": "2026-08-22 07:51:23",
+      "reviewedAt": "2026-08-22 07:51:23"
+    },
+    {
+      "id": "leave-1787384858976",
+      "employeeId": "EMP-001",
+      "employeeName": "Sarah Connor",
+      "department": "Human Resources",
+      "leaveType": "Unpaid",
+      "startDate": "2026-08-22",
+      "endDate": "2026-08-24",
+      "totalDays": 3,
+      "reason": "health issues",
+      "status": "Pending",
+      "adminComments": "",
+      "appliedAt": "2026-08-22 07:47:38",
+      "reviewedAt": null
+    },
+    {
+      "id": "leave-1787384847340",
+      "employeeId": "EMP-001",
+      "employeeName": "Sarah Connor",
+      "department": "Human Resources",
+      "leaveType": "Sick",
+      "startDate": "2026-08-22",
+      "endDate": "2026-08-24",
+      "totalDays": 3,
+      "reason": "health issues",
+      "status": "Pending",
+      "adminComments": "",
+      "appliedAt": "2026-08-22 07:47:27",
+      "reviewedAt": null
+    },
     {
       "id": "leave-1787383653978",
       "employeeId": "EMP-001",
@@ -739,6 +784,42 @@
     }
   ],
   "notifications": [
+    {
+      "id": "notif-1787385083178",
+      "recipientId": "EMP-002",
+      "title": "Leave Request Approved",
+      "message": "Your Paid Leave (2026-09-10 to 2026-09-12) has been approved by HR. Remarks: \"Approved by HR Operations. Enjoy the workshop!\"",
+      "type": "leave_approved",
+      "read": false,
+      "timestamp": "2026-08-22 07:51:23"
+    },
+    {
+      "id": "notif-1787385083170-EMP-001",
+      "recipientId": "EMP-001",
+      "title": "New Leave Application",
+      "message": "Alex Rivera submitted a 3-day Paid Leave request for 2026-09-10.",
+      "type": "leave_request",
+      "read": false,
+      "timestamp": "2026-08-22 07:51:23"
+    },
+    {
+      "id": "notif-1787384858980-EMP-001",
+      "recipientId": "EMP-001",
+      "title": "New Leave Application",
+      "message": "Sarah Connor submitted a 3-day Unpaid Leave request for 2026-08-22.",
+      "type": "leave_request",
+      "read": false,
+      "timestamp": "2026-08-22 07:47:38"
+    },
+    {
+      "id": "notif-1787384847342-EMP-001",
+      "recipientId": "EMP-001",
+      "title": "New Leave Application",
+      "message": "Sarah Connor submitted a 3-day Sick Leave request for 2026-08-22.",
+      "type": "leave_request",
+      "read": false,
+      "timestamp": "2026-08-22 07:47:27"
+    },
     {
       "id": "notif-1787384381175",
       "recipientId": "EMP-001",
