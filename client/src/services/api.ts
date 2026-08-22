@@ -54,6 +54,7 @@ export const api = {
       request('/auth/forgot-password', { method: 'POST', body: JSON.stringify({ emailOrId }) }),
     resetPassword: (payload: { emailOrId: string; otp: string; newPassword: string }) =>
       request('/auth/reset-password', { method: 'POST', body: JSON.stringify(payload) }),
+    hasAdmin: () => request('/auth/admin-exists'),
     getMe: () => request('/auth/me'),
   },
 

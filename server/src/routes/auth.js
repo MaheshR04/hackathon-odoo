@@ -19,11 +19,15 @@ router.post('/register', (req, res) => {
     const cleanPassword = String(password);
 
     const employees = db.getCollection('employees');
-
+    
     // Check if email already exists
     if (employees.some(e => e && e.email && String(e.email).toLowerCase() === cleanEmail)) {
       return res.status(400).json({ success: false, message: 'An account with this email address already exists.' });
     }
+
+    // Check if HR Admin account already exists (Only 1 HR Admin allowed)
+    const hasAdmin = employees.some(e => e && e.role === 'admin');
+    const requestedRole = (role === 'admin' && !hasAdmin) ? 'admin' : 'employee';
 
     // Auto-generate employee ID if not provided or clean provided ID
     let rawId = employeeId !== undefined && employeeId !== null ? String(employeeId).trim() : '';
@@ -43,9 +47,9 @@ router.post('/register', (req, res) => {
       name: cleanName,
       email: cleanEmail,
       password: hashedPassword,
-      role: role === 'admin' ? 'admin' : 'employee',
-      designation: designation || (role === 'admin' ? 'HR Operations Officer' : 'Associate Specialist'),
-      department: department || 'General Operations',
+      role: requestedRole,
+      designation: designation || (requestedRole === 'admin' ? 'Head of People & HR Operations' : 'Associate Specialist'),
+      department: department || (requestedRole === 'admin' ? 'Human Resources' : 'General Operations'),
       phone: phone || '+1 (555) 000-0000',
       address: address || 'Remote / Corporate HQ',
       emergencyContact: 'Not specified',
@@ -132,6 +136,10 @@ router.post('/login', (req, res) => {
       return res.status(401).json({ success: false, message: 'Invalid credentials. User not found.' });
     }
 
+    if (user.employmentStatus === 'Deactivated' || user.employmentStatus === 'Inactive') {
+      return res.status(403).json({ success: false, message: 'Your employee account has been deactivated by HR administration.' });
+    }
+
     const isMatch = bcrypt.compareSync(String(password), user.password);
     if (!isMatch) {
       return res.status(401).json({ success: false, message: 'Incorrect password. Please try again.' });
@@ -149,6 +157,17 @@ router.post('/login', (req, res) => {
   } catch (error) {
     console.error('Login error:', error);
     return res.status(500).json({ success: false, message: 'Server error during login. Please try again.' });
+  }
+});
+
+// Public Endpoint to check if an HR Admin account already exists
+router.get('/admin-exists', (req, res) => {
+  try {
+    const employees = db.getCollection('employees');
+    const hasAdmin = employees.some(e => e && e.role === 'admin');
+    return res.json({ success: true, hasAdmin });
+  } catch (error) {
+    return res.json({ success: true, hasAdmin: true });
   }
 });
 

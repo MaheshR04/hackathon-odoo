@@ -2,9 +2,9 @@
   "employees": [
     {
       "id": "EMP-001",
-      "name": "Sarah Connor",
-      "email": "sarah.admin@dayflow.com",
-      "password": "$2a$10$dW15LpCve2jwrmb7W9dcFu2MxlD96Uorykbd1ODSeq0OaaXxEEpCu",
+      "name": "HR",
+      "email": "hr@gmail.com",
+      "password": "$2a$10$AdzSxBqffY8.8jw0K7Lm3OO0WG//2zMnkc..dIvF.v13YymD/RE96",
       "role": "admin",
       "designation": "Head of People & HR Operations",
       "department": "Human Resources",
@@ -334,9 +334,9 @@
       "name": "Rathod",
       "email": "mahesh.test.registration@gmail.com",
       "password": "$2a$10$DEfL.g5eg0R0rkqB5XFrMe8Ax3t/IExUZVq.OGeirtn2BWUBLsFRS",
-      "role": "admin",
-      "designation": "HR Operations Officer",
-      "department": "Human Resources",
+      "role": "employee",
+      "designation": "Associate Operations Specialist",
+      "department": "General Operations",
       "phone": "+1 (555) 000-0000",
       "address": "Remote / Corporate HQ",
       "emergencyContact": "Not specified",
@@ -369,7 +369,9 @@
           "type": "PDF",
           "size": "1.5 MB"
         }
-      ]
+      ],
+      "resetOtp": "926177",
+      "resetOtpExpires": 1787395228336
     },
     {
       "id": "EMP-56566",
@@ -416,10 +418,41 @@
       "resetOtpExpires": 1787393166731
     }
   ],
-  "attendance": [],
+  "attendance": [
+    {
+      "id": "att-1787394747302",
+      "employeeId": "EMP-010",
+      "employeeName": "HR",
+      "date": "2026-08-22",
+      "checkIn": "04:02 PM",
+      "checkInTimestamp": 1787394747302,
+      "checkOut": null,
+      "workingHours": 0,
+      "status": "Present",
+      "remarks": "Web Portal Check-in"
+    }
+  ],
   "leaves": [],
   "payrollHistory": [],
   "notifications": [
+    {
+      "id": "notif-1787394741615",
+      "recipientId": "EMP-010",
+      "title": "Welcome to Dayflow HRMS!",
+      "message": "Hi HR, your account is active and verified. Complete your profile and check your dashboard.",
+      "type": "welcome",
+      "read": false,
+      "timestamp": "2026-08-22 10:32:21"
+    },
+    {
+      "id": "notif-pwd-1787394328336",
+      "recipientId": "EMP-565",
+      "title": "Password Reset Code Issued",
+      "message": "A password reset request was initiated for mahesh.test.registration@gmail.com. Verification OTP Code: 926177",
+      "type": "security",
+      "read": false,
+      "timestamp": "2026-08-22 10:25:28"
+    },
     {
       "id": "notif-pwd-1787392266731",
       "recipientId": "EMP-56566",

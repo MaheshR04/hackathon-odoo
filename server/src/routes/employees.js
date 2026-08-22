@@ -213,7 +213,12 @@ router.put('/:id', authenticateToken, (req, res) => {
       if (updates.designation) currentEmp.designation = updates.designation;
       if (updates.department) currentEmp.department = updates.department;
       if (updates.role) currentEmp.role = updates.role;
-      if (updates.employmentStatus) currentEmp.employmentStatus = updates.employmentStatus;
+      if (updates.employmentStatus) {
+        if (updates.employmentStatus === 'Deactivated' && currentEmp.id === req.user.id) {
+          return res.status(400).json({ success: false, message: 'You cannot deactivate your own HR Admin account.' });
+        }
+        currentEmp.employmentStatus = updates.employmentStatus;
+      }
       if (updates.phone) currentEmp.phone = updates.phone;
       if (updates.address) currentEmp.address = updates.address;
       if (updates.emergencyContact) currentEmp.emergencyContact = updates.emergencyContact;

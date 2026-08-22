@@ -510,7 +510,7 @@ export const AuthPage: React.FC = () => {
                         className="w-full px-3.5 py-2.5 rounded-xl border border-slate-700 bg-slate-900 text-purple-300 font-bold text-xs focus:border-purple-500 focus:outline-none"
                       >
                         <option value="employee">Employee</option>
-                        <option value="admin">Admin / HR Officer</option>
+                        <option value="admin" disabled>Admin / HR Officer (Single HR Assigned)</option>
                       </select>
                     </div>
 

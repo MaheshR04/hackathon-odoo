@@ -1,0 +1,29 @@
+{
+  "application": "Dayflow HRMS",
+  "version": "1.0.0",
+  "authentication": {
+    "algorithm": "JWT (HS256)",
+    "tokenExpiration": "7d",
+    "passwordHasher": "bcryptjs",
+    "saltRounds": 10,
+    "loginIdentifiers": ["email", "employeeId"],
+    "passwordRecovery": {
+      "method": "6-Digit Verification Code (OTP)",
+      "codeExpirationMinutes": 15
+    }
+  },
+  "databasePersistence": {
+    "engine": "JSON-Store (Atomic Debounced File Persistence)",
+    "storageFile": "server/data/dayflow_db.json",
+    "volumeMount": "./server/data:/app/server/data"
+  },
+  "rolesAndPermissions": {
+    "admin": {
+      "access": ["HR Dashboard", "Employee Management", "Leave Review & Approvals", "Payroll Processing", "Company Analytics"],
+      "primaryAccount": "hr@gmail.com"
+    },
+    "employee": {
+      "access": ["Self-Service Portal", "Clock In/Out Ticker", "Apply Time-Off", "View Payslips", "My 360 Profile"]
+    }
+  }
+}

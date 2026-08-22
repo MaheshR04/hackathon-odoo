@@ -14,7 +14,10 @@ import {
   Trash2,
   Download,
   Sparkles,
-  Shield
+  Shield,
+  UserCheck,
+  UserX,
+  Power
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
@@ -55,6 +58,25 @@ export const ProfilePage: React.FC = () => {
   useEffect(() => {
     fetchProfile();
   }, [user]);
+
+  const handleToggleAccountStatus = async () => {
+    const targetEmp = employee || user;
+    if (!targetEmp || !isAdmin) return;
+    if (targetEmp.id === user?.id) {
+      alert('You cannot deactivate your own HR Admin account.');
+      return;
+    }
+    const newStatus = targetEmp.employmentStatus === 'Active' ? 'Deactivated' : 'Active';
+    try {
+      const res = await api.employees.update(targetEmp.id, { employmentStatus: newStatus });
+      if (res.success) {
+        setEmployee(res.employee);
+        refreshUser();
+      }
+    } catch (err: any) {
+      alert(err.message || 'Failed to update account activation status.');
+    }
+  };
 
   const handleAddDocument = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -114,13 +136,38 @@ export const ProfilePage: React.FC = () => {
           </p>
         </div>
 
-        <button
-          onClick={() => setShowEditModal(true)}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-bold shadow-lg shadow-purple-950/50 transition active:scale-95"
-        >
-          <Edit className="h-4 w-4" />
-          <span>Edit Profile Details</span>
-        </button>
+        <div className="flex items-center gap-3">
+          {isAdmin && emp?.id !== user?.id && (
+            <button
+              onClick={handleToggleAccountStatus}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold shadow-lg transition active:scale-95 ${
+                emp?.employmentStatus === 'Active'
+                  ? 'bg-rose-600 hover:bg-rose-500 text-white shadow-rose-950/40'
+                  : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-950/40'
+              }`}
+            >
+              {emp?.employmentStatus === 'Active' ? (
+                <>
+                  <UserX className="h-4 w-4" />
+                  <span>Deactivate Account</span>
+                </>
+              ) : (
+                <>
+                  <UserCheck className="h-4 w-4" />
+                  <span>Activate Account</span>
+                </>
+              )}
+            </button>
+          )}
+
+          <button
+            onClick={() => setShowEditModal(true)}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-bold shadow-lg shadow-purple-950/50 transition active:scale-95"
+          >
+            <Edit className="h-4 w-4" />
+            <span>Edit Profile Details</span>
+          </button>
+        </div>
       </div>
 
       {/* Hero Profile Banner */}
@@ -143,6 +190,16 @@ export const ProfilePage: React.FC = () => {
                   }`}
                 >
                   {emp?.role === 'admin' ? 'Admin / HR Officer' : 'Verified Employee'}
+                </span>
+
+                <span
+                  className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider ${
+                    emp?.employmentStatus === 'Active'
+                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                      : 'bg-rose-500/20 text-rose-300 border border-rose-500/30 animate-pulse'
+                  }`}
+                >
+                  • {emp?.employmentStatus || 'Active'}
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-slate-300 font-medium mt-1">{emp?.designation}</p>

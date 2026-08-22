@@ -76,6 +76,26 @@ export const EmployeesPage: React.FC<EmployeesPageProps> = ({
     fetchEmployees();
   }, [search, selectedDept, selectedRole]);
 
+  const handleToggleAccountStatus = async (emp: Employee) => {
+    if (!isAdmin) return;
+    if (emp.id === user?.id) {
+      alert('You cannot deactivate your own HR Admin account.');
+      return;
+    }
+    const newStatus = emp.employmentStatus === 'Active' ? 'Deactivated' : 'Active';
+    try {
+      const res = await api.employees.update(emp.id, { employmentStatus: newStatus });
+      if (res.success) {
+        fetchEmployees();
+        if (activeDossierEmp?.id === emp.id) {
+          setActiveDossierEmp(res.employee);
+        }
+      }
+    } catch (err: any) {
+      alert(err.message || 'Failed to update account activation status.');
+    }
+  };
+
   return (
     <div className="space-y-6 pb-12">
       {/* Header Bar */}
@@ -230,13 +250,28 @@ export const EmployeesPage: React.FC<EmployeesPageProps> = ({
                 </div>
 
                 {isAdmin && (
-                  <button
-                    onClick={() => setEditingEmp(activeDossierEmp)}
-                    className="p-2 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 border border-purple-500/20 transition"
-                    title="Edit Profile"
-                  >
-                    <Edit className="h-4 w-4" />
-                  </button>
+                  <div className="flex items-center gap-2">
+                    {activeDossierEmp.id !== user?.id && (
+                      <button
+                        onClick={() => handleToggleAccountStatus(activeDossierEmp)}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
+                          activeDossierEmp.employmentStatus === 'Active'
+                            ? 'bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20'
+                            : 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20'
+                        }`}
+                        title={activeDossierEmp.employmentStatus === 'Active' ? 'Deactivate Employee' : 'Activate Employee'}
+                      >
+                        {activeDossierEmp.employmentStatus === 'Active' ? 'Deactivate' : 'Activate'}
+                      </button>
+                    )}
+                    <button
+                      onClick={() => setEditingEmp(activeDossierEmp)}
+                      className="p-2 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 border border-purple-500/20 transition"
+                      title="Edit Profile"
+                    >
+                      <Edit className="h-4 w-4" />
+                    </button>
+                  </div>
                 )}
               </div>
 
