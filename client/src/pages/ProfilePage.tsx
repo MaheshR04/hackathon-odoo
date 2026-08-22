@@ -59,22 +59,35 @@ export const ProfilePage: React.FC = () => {
     fetchProfile();
   }, [user]);
 
+  const [updatingStatus, setUpdatingStatus] = useState(false);
+
   const handleToggleAccountStatus = async () => {
     const targetEmp = employee || user;
-    if (!targetEmp || !isAdmin) return;
+    if (!targetEmp || !isAdmin || updatingStatus) return;
     if (targetEmp.id === user?.id) {
       alert('You cannot deactivate your own HR Admin account.');
       return;
     }
     const newStatus = targetEmp.employmentStatus === 'Active' ? 'Deactivated' : 'Active';
+
+    // Instant optimistic UI update (0ms lag)
+    const previousEmp = targetEmp;
+    setEmployee({ ...targetEmp, employmentStatus: newStatus });
+    setUpdatingStatus(true);
+
     try {
       const res = await api.employees.update(targetEmp.id, { employmentStatus: newStatus });
       if (res.success) {
         setEmployee(res.employee);
         refreshUser();
+      } else {
+        setEmployee(previousEmp);
       }
     } catch (err: any) {
+      setEmployee(previousEmp);
       alert(err.message || 'Failed to update account activation status.');
+    } finally {
+      setUpdatingStatus(false);
     }
   };
 

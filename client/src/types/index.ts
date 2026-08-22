@@ -39,7 +39,7 @@ export interface Employee {
   address?: string;
   emergencyContact?: string;
   joiningDate?: string;
-  employmentStatus?: 'Active' | 'On Leave' | 'Terminated';
+  employmentStatus?: 'Active' | 'Deactivated' | 'On Leave' | 'Terminated';
   profilePicture?: string;
   salaryStructure?: SalaryStructure;
   leaveBalances?: LeaveBalances;

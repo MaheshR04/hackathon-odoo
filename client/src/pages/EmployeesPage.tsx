@@ -76,23 +76,40 @@ export const EmployeesPage: React.FC<EmployeesPageProps> = ({
     fetchEmployees();
   }, [search, selectedDept, selectedRole]);
 
+  const [togglingEmpId, setTogglingEmpId] = useState<string | null>(null);
+
   const handleToggleAccountStatus = async (emp: Employee) => {
-    if (!isAdmin) return;
+    if (!isAdmin || togglingEmpId === emp.id) return;
     if (emp.id === user?.id) {
       alert('You cannot deactivate your own HR Admin account.');
       return;
     }
     const newStatus = emp.employmentStatus === 'Active' ? 'Deactivated' : 'Active';
+
+    // Instant optimistic update on local state (0ms lag, no page reload)
+    setEmployees(prev => prev.map(e => (e.id === emp.id ? { ...e, employmentStatus: newStatus } : e)));
+    if (activeDossierEmp?.id === emp.id) {
+      setActiveDossierEmp(prev => (prev ? { ...prev, employmentStatus: newStatus } : null));
+    }
+    setTogglingEmpId(emp.id);
+
     try {
       const res = await api.employees.update(emp.id, { employmentStatus: newStatus });
       if (res.success) {
-        fetchEmployees();
+        setEmployees(prev => prev.map(e => (e.id === emp.id ? res.employee : e)));
         if (activeDossierEmp?.id === emp.id) {
           setActiveDossierEmp(res.employee);
         }
+      } else {
+        setEmployees(prev => prev.map(e => (e.id === emp.id ? emp : e)));
+        if (activeDossierEmp?.id === emp.id) setActiveDossierEmp(emp);
       }
     } catch (err: any) {
+      setEmployees(prev => prev.map(e => (e.id === emp.id ? emp : e)));
+      if (activeDossierEmp?.id === emp.id) setActiveDossierEmp(emp);
       alert(err.message || 'Failed to update account activation status.');
+    } finally {
+      setTogglingEmpId(null);
     }
   };
 
