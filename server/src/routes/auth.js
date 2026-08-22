@@ -29,9 +29,8 @@ router.post('/register', (req, res) => {
       return res.status(400).json({ success: false, message: 'An account with this email address already exists.' });
     }
 
-    // Check if HR Admin account already exists (Only 1 HR Admin allowed)
-    const hasAdmin = employees.some(e => e && e.role === 'admin');
-    const requestedRole = (role === 'admin' && !hasAdmin) ? 'admin' : 'employee';
+    // Assign requested role directly (Admin / HR or Employee)
+    const requestedRole = role === 'admin' ? 'admin' : 'employee';
 
     // Auto-generate employee ID if not provided or clean provided ID
     let rawId = employeeId !== undefined && employeeId !== null ? String(employeeId).trim() : '';

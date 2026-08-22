@@ -164,7 +164,7 @@ export const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({ isOpen, onCl
                 className="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-800 text-purple-300 font-bold text-xs"
               >
                 <option value="employee">Employee</option>
-                <option value="admin" disabled>Admin / HR Officer (Single HR Assigned)</option>
+                <option value="admin">Admin / HR Officer</option>
               </select>
             </div>
           </div>
