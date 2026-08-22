@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, Sparkles, User, Lock, Mail, ArrowRight, CheckCircle2, Building, Eye, EyeOff, AlertCircle, KeyRound, ArrowLeft } from 'lucide-react';
+import { Shield, Sparkles, User, Lock, Mail, ArrowRight, CheckCircle2, Building, Eye, EyeOff, AlertCircle, KeyRound, ArrowLeft, Info } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 
@@ -35,11 +35,17 @@ export const AuthPage: React.FC = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    const cleanId = emailOrId.trim();
+    const cleanPass = password.trim();
+    if (!cleanId || !cleanPass) {
+      setErrorMsg('Please enter your email/ID and password.');
+      return;
+    }
     setLoading(true);
     setErrorMsg('');
     setSuccessMsg('');
     try {
-      await login(emailOrId, password);
+      await login(cleanId, cleanPass);
     } catch (err: any) {
       setErrorMsg(err.message || 'Login failed. Please check your credentials.');
     } finally {
@@ -49,7 +55,8 @@ export const AuthPage: React.FC = () => {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (regData.password.length < 6) {
+    const cleanPass = regData.password.trim();
+    if (cleanPass.length < 6) {
       setErrorMsg('Password must be at least 6 characters long.');
       return;
     }
@@ -57,7 +64,13 @@ export const AuthPage: React.FC = () => {
     setErrorMsg('');
     setSuccessMsg('');
     try {
-      await register(regData);
+      await register({
+        ...regData,
+        name: regData.name.trim(),
+        email: regData.email.trim(),
+        employeeId: regData.employeeId.trim(),
+        password: cleanPass
+      });
     } catch (err: any) {
       setErrorMsg(err.message || 'Registration failed.');
     } finally {
@@ -67,7 +80,8 @@ export const AuthPage: React.FC = () => {
 
   const handleRequestOtp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!recoveryEmailOrId) {
+    const cleanId = recoveryEmailOrId.trim();
+    if (!cleanId) {
       setErrorMsg('Please enter your email address or Employee ID.');
       return;
     }
@@ -75,7 +89,7 @@ export const AuthPage: React.FC = () => {
     setErrorMsg('');
     setSuccessMsg('');
     try {
-      const res = await api.auth.forgotPassword(recoveryEmailOrId);
+      const res = await api.auth.forgotPassword(cleanId);
       if (res.success) {
         setSuccessMsg(res.message);
         if (res.otpDemo) {
@@ -92,11 +106,13 @@ export const AuthPage: React.FC = () => {
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!otpCode || !newPassword) {
+    const cleanOtp = otpCode.trim();
+    const cleanNewPass = newPassword.trim();
+    if (!cleanOtp || !cleanNewPass) {
       setErrorMsg('Verification OTP code and new password are required.');
       return;
     }
-    if (newPassword.length < 6) {
+    if (cleanNewPass.length < 6) {
       setErrorMsg('New password must be at least 6 characters long.');
       return;
     }
@@ -105,17 +121,17 @@ export const AuthPage: React.FC = () => {
     setSuccessMsg('');
     try {
       const res = await api.auth.resetPassword({
-        emailOrId: recoveryEmailOrId,
-        otp: otpCode,
-        newPassword
+        emailOrId: recoveryEmailOrId.trim(),
+        otp: cleanOtp,
+        newPassword: cleanNewPass
       });
       if (res.success) {
         setSuccessMsg('Password updated successfully! Redirecting to Sign In...');
         setTimeout(() => {
           setIsForgot(false);
           setIsLogin(true);
-          setEmailOrId(recoveryEmailOrId);
-          setPassword(newPassword);
+          setEmailOrId(recoveryEmailOrId.trim());
+          setPassword(cleanNewPass);
         }, 1500);
       }
     } catch (err: any) {
@@ -184,6 +200,14 @@ export const AuthPage: React.FC = () => {
           {/* Case 1: Forgot Password View */}
           {isForgot ? (
             <div className="space-y-5">
+              {/* Demo Notice Banner */}
+              <div className="flex items-start gap-2.5 rounded-xl bg-amber-500/10 border border-amber-500/25 p-3 text-xs text-amber-300">
+                <Info className="h-4 w-4 shrink-0 text-amber-400 mt-0.5" />
+                <p className="leading-relaxed">
+                  <span className="font-semibold text-amber-200">Demo of sending mail:</span> We are implementing this feature as a real-world mail sending feature.
+                </p>
+              </div>
+
               <div className="flex items-center gap-3">
                 <button
                   type="button"

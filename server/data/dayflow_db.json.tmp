@@ -421,7 +421,7 @@
       "id": "EMP-010",
       "name": "Test Tester",
       "email": "test.user.1787398979134@dayflow.com",
-      "password": "$2a$10$/UwlUHeX1YfqG1764vCdoeOq/qIloZU5odmTOHgsGLn.jEke.2CZy",
+      "password": "$2a$10$ZQGp/kh5QwM14BfucI1YdeEUPIqZ2WqHE.BXARqOqFJ1ssvbmdMgu",
       "role": "employee",
       "designation": "QA Engineer",
       "department": "Engineering",
@@ -477,6 +477,15 @@
   "leaves": [],
   "payrollHistory": [],
   "notifications": [
+    {
+      "id": "notif-pwd-1787398979756",
+      "recipientId": "EMP-010",
+      "title": "Password Reset Code Issued",
+      "message": "A password reset request was initiated for test.user.1787398979134@dayflow.com. Verification OTP Code: 233383",
+      "type": "security",
+      "read": false,
+      "timestamp": "2026-08-22 11:42:59"
+    },
     {
       "id": "notif-1787398979291",
       "recipientId": "EMP-010",
