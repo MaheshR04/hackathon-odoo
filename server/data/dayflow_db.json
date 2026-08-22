@@ -333,7 +333,7 @@
       "id": "EMP-565",
       "name": "Rathod",
       "email": "mahesh.test.registration@gmail.com",
-      "password": "$2a$10$LqeZUXKwcLshXFPrxmzwUObJNNL6qUaSg9gKiUFpldWlWDQL0eoyu",
+      "password": "$2a$10$DEfL.g5eg0R0rkqB5XFrMe8Ax3t/IExUZVq.OGeirtn2BWUBLsFRS",
       "role": "admin",
       "designation": "HR Operations Officer",
       "department": "Human Resources",
@@ -370,12 +370,92 @@
           "size": "1.5 MB"
         }
       ]
+    },
+    {
+      "id": "EMP-56566",
+      "name": "mahi",
+      "email": "mlr134144@gmail.com",
+      "password": "$2a$10$N8uqGllTP27UJnGmapwJV.KSL6yamf26L4TCV21/k3bsyMMhYiBhy",
+      "role": "employee",
+      "designation": "Software Specialist",
+      "department": "Engineering",
+      "phone": "+1 (555) 000-0000",
+      "address": "Remote / Corporate HQ",
+      "emergencyContact": "Not specified",
+      "joiningDate": "2026-08-22",
+      "employmentStatus": "Active",
+      "profilePicture": "https://api.dicebear.com/7.x/avataaars/svg?seed=mahi",
+      "salaryStructure": {
+        "basic": 45000,
+        "hra": 18000,
+        "specialAllowance": 12000,
+        "bonus": 2000,
+        "pfDeduction": 5400,
+        "professionalTax": 2000,
+        "incomeTaxTDS": 5600,
+        "grossSalary": 77000,
+        "netSalary": 64000
+      },
+      "leaveBalances": {
+        "paid": 18,
+        "usedPaid": 0,
+        "sick": 10,
+        "usedSick": 0,
+        "unpaid": 0
+      },
+      "documents": [
+        {
+          "id": "doc-1787392202140",
+          "name": "Welcome_Onboarding_Handbook.pdf",
+          "uploadedAt": "2026-08-22",
+          "type": "PDF",
+          "size": "1.5 MB"
+        }
+      ],
+      "resetOtp": "902097",
+      "resetOtpExpires": 1787393166731
     }
   ],
   "attendance": [],
   "leaves": [],
   "payrollHistory": [],
   "notifications": [
+    {
+      "id": "notif-pwd-1787392266731",
+      "recipientId": "EMP-56566",
+      "title": "Password Reset Code Issued",
+      "message": "A password reset request was initiated for mlr134144@gmail.com. Verification OTP Code: 902097",
+      "type": "security",
+      "read": false,
+      "timestamp": "2026-08-22 09:51:06"
+    },
+    {
+      "id": "notif-pwd-1787392222230",
+      "recipientId": "EMP-56566",
+      "title": "Password Reset Code Issued",
+      "message": "A password reset request was initiated for mlr134144@gmail.com. Verification OTP Code: 287737",
+      "type": "security",
+      "read": false,
+      "timestamp": "2026-08-22 09:50:22"
+    },
+    {
+      "id": "notif-1787392202140",
+      "recipientId": "EMP-56566",
+      "title": "Welcome to Dayflow HRMS!",
+      "message": "Hi mahi, your account is active and verified. Complete your profile and check your dashboard.",
+      "type": "welcome",
+      "read": false,
+      "timestamp": "2026-08-22 09:50:02"
+    },
+    {
+      "id": "notif-pwd-1787391725014",
+      "recipientId": "EMP-565",
+      "title": "Password Reset Code Issued",
+      "message": "A password reset request was initiated for mahesh.test.registration@gmail.com. Verification OTP Code: 734789",
+      "type": "security",
+      "read": false,
+      "timestamp": "2026-08-22 09:42:05"
+    },
     {
       "id": "notif-1787390288171",
       "recipientId": "EMP-565",

@@ -152,6 +152,120 @@ router.post('/login', (req, res) => {
   }
 });
 
+// Forgot Password (Send OTP / Reset Token to registered email)
+router.post('/forgot-password', (req, res) => {
+  try {
+    const { emailOrId } = req.body;
+    if (!emailOrId) {
+      return res.status(400).json({ success: false, message: 'Please enter your registered email address or Employee ID.' });
+    }
+
+    const cleanQuery = String(emailOrId).trim().toLowerCase();
+    const employees = db.getCollection('employees');
+    const index = employees.findIndex(
+      e => (e && e.email && String(e.email).toLowerCase() === cleanQuery) ||
+           (e && e.id && String(e.id).toLowerCase() === cleanQuery)
+    );
+
+    if (index === -1) {
+      return res.status(404).json({ success: false, message: 'No registered user account found matching this email or Employee ID.' });
+    }
+
+    const user = employees[index];
+    // Generate 6-digit OTP code
+    const otp = String(Math.floor(100000 + Math.random() * 900000));
+    const expiresAt = Date.now() + 15 * 60 * 1000; // 15 minutes validity
+
+    user.resetOtp = otp;
+    user.resetOtpExpires = expiresAt;
+    employees[index] = user;
+    db.setCollection('employees', employees);
+
+    // Create system notification for employee
+    const notifications = db.getCollection('notifications');
+    notifications.unshift({
+      id: `notif-pwd-${Date.now()}`,
+      recipientId: user.id,
+      title: 'Password Reset Code Issued',
+      message: `A password reset request was initiated for ${user.email}. Verification OTP Code: ${otp}`,
+      type: 'security',
+      read: false,
+      timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19)
+    });
+    db.setCollection('notifications', notifications);
+
+    console.log(`====================================================`);
+    console.log(` 📧 EMAIL DISPATCH SIMULATION to ${user.email}`);
+    console.log(` 🔒 Password Reset OTP Code: [ ${otp} ]`);
+    console.log(`====================================================`);
+
+    return res.json({
+      success: true,
+      message: `Password reset verification code has been dispatched to ${user.email}.`,
+      email: user.email,
+      otpDemo: otp
+    });
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    return res.status(500).json({ success: false, message: 'Server error processing password recovery request.' });
+  }
+});
+
+// Reset Password (Verify OTP & Update Password)
+router.post('/reset-password', (req, res) => {
+  try {
+    const { emailOrId, otp, newPassword } = req.body;
+
+    if (!emailOrId || !otp || !newPassword) {
+      return res.status(400).json({ success: false, message: 'Email/ID, OTP code, and new password are required.' });
+    }
+
+    if (String(newPassword).length < 6) {
+      return res.status(400).json({ success: false, message: 'New password must be at least 6 characters long.' });
+    }
+
+    const cleanQuery = String(emailOrId).trim().toLowerCase();
+    const cleanOtp = String(otp).trim();
+    const employees = db.getCollection('employees');
+
+    const index = employees.findIndex(
+      e => (e && e.email && String(e.email).toLowerCase() === cleanQuery) ||
+           (e && e.id && String(e.id).toLowerCase() === cleanQuery)
+    );
+
+    if (index === -1) {
+      return res.status(404).json({ success: false, message: 'Account not found.' });
+    }
+
+    const user = employees[index];
+
+    if (!user.resetOtp || user.resetOtp !== cleanOtp) {
+      return res.status(400).json({ success: false, message: 'Invalid verification OTP code. Please check and try again.' });
+    }
+
+    if (user.resetOtpExpires && Date.now() > user.resetOtpExpires) {
+      return res.status(400).json({ success: false, message: 'Verification OTP code has expired. Please request a new one.' });
+    }
+
+    // Hash and update password
+    const salt = bcrypt.genSaltSync(10);
+    user.password = bcrypt.hashSync(String(newPassword), salt);
+    delete user.resetOtp;
+    delete user.resetOtpExpires;
+
+    employees[index] = user;
+    db.setCollection('employees', employees);
+
+    return res.json({
+      success: true,
+      message: 'Password reset successful! You can now sign in with your new password.'
+    });
+  } catch (error) {
+    console.error('Reset password error:', error);
+    return res.status(500).json({ success: false, message: 'Server error resetting password.' });
+  }
+});
+
 // Get Current User Profile
 router.get('/me', authenticateToken, (req, res) => {
   const employees = db.getCollection('employees');

@@ -50,6 +50,10 @@ export const api = {
       request('/auth/login', { method: 'POST', body: JSON.stringify(credentials) }),
     register: (userData: any) =>
       request('/auth/register', { method: 'POST', body: JSON.stringify(userData) }),
+    forgotPassword: (emailOrId: string) =>
+      request('/auth/forgot-password', { method: 'POST', body: JSON.stringify({ emailOrId }) }),
+    resetPassword: (payload: { emailOrId: string; otp: string; newPassword: string }) =>
+      request('/auth/reset-password', { method: 'POST', body: JSON.stringify(payload) }),
     getMe: () => request('/auth/me'),
   },
 
