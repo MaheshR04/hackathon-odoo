@@ -328,12 +328,64 @@
           "size": "1.5 MB"
         }
       ]
+    },
+    {
+      "id": "EMP-565",
+      "name": "Rathod",
+      "email": "mahesh.test.registration@gmail.com",
+      "password": "$2a$10$LqeZUXKwcLshXFPrxmzwUObJNNL6qUaSg9gKiUFpldWlWDQL0eoyu",
+      "role": "admin",
+      "designation": "HR Operations Officer",
+      "department": "Human Resources",
+      "phone": "+1 (555) 000-0000",
+      "address": "Remote / Corporate HQ",
+      "emergencyContact": "Not specified",
+      "joiningDate": "2026-08-22",
+      "employmentStatus": "Active",
+      "profilePicture": "https://api.dicebear.com/7.x/avataaars/svg?seed=Rathod",
+      "salaryStructure": {
+        "basic": 45000,
+        "hra": 18000,
+        "specialAllowance": 12000,
+        "bonus": 2000,
+        "pfDeduction": 5400,
+        "professionalTax": 2000,
+        "incomeTaxTDS": 5600,
+        "grossSalary": 77000,
+        "netSalary": 64000
+      },
+      "leaveBalances": {
+        "paid": 18,
+        "usedPaid": 0,
+        "sick": 10,
+        "usedSick": 0,
+        "unpaid": 0
+      },
+      "documents": [
+        {
+          "id": "doc-1787390288171",
+          "name": "Welcome_Onboarding_Handbook.pdf",
+          "uploadedAt": "2026-08-22",
+          "type": "PDF",
+          "size": "1.5 MB"
+        }
+      ]
     }
   ],
   "attendance": [],
   "leaves": [],
   "payrollHistory": [],
-  "notifications": [],
+  "notifications": [
+    {
+      "id": "notif-1787390288171",
+      "recipientId": "EMP-565",
+      "title": "Welcome to Dayflow HRMS!",
+      "message": "Hi Rathod, your account is active and verified. Complete your profile and check your dashboard.",
+      "type": "welcome",
+      "read": false,
+      "timestamp": "2026-08-22 09:18:08"
+    }
+  ],
   "departments": [
     "Human Resources",
     "Engineering",

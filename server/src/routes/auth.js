@@ -14,28 +14,34 @@ router.post('/register', (req, res) => {
       return res.status(400).json({ success: false, message: 'Name, email, and password are required.' });
     }
 
+    const cleanEmail = String(email).trim().toLowerCase();
+    const cleanName = String(name).trim();
+    const cleanPassword = String(password);
+
     const employees = db.getCollection('employees');
-    
+
     // Check if email already exists
-    if (employees.some(e => e.email.toLowerCase() === email.toLowerCase())) {
-      return res.status(400).json({ success: false, message: 'An account with this email already exists.' });
+    if (employees.some(e => e && e.email && String(e.email).toLowerCase() === cleanEmail)) {
+      return res.status(400).json({ success: false, message: 'An account with this email address already exists.' });
     }
 
-    // Auto-generate employee ID if not provided
-    const id = employeeId && employeeId.trim() ? employeeId.trim() : `EMP-${String(employees.length + 1).padStart(3, '0')}`;
-    
-    if (employees.some(e => e.id.toLowerCase() === id.toLowerCase())) {
-      return res.status(400).json({ success: false, message: 'Employee ID is already registered.' });
+    // Auto-generate employee ID if not provided or clean provided ID
+    let rawId = employeeId !== undefined && employeeId !== null ? String(employeeId).trim() : '';
+    let id = rawId.length > 0 ? (rawId.toUpperCase().startsWith('EMP-') ? rawId : `EMP-${rawId}`) : `EMP-${String(employees.length + 1).padStart(3, '0')}`;
+
+    if (employees.some(e => e && e.id && String(e.id).toLowerCase() === id.toLowerCase())) {
+      // Auto-append timestamp suffix if custom ID collides
+      id = `EMP-${Date.now().toString().slice(-4)}`;
     }
 
     // Hash password
     const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = bcrypt.hashSync(password, salt);
+    const hashedPassword = bcrypt.hashSync(cleanPassword, salt);
 
     const newEmployee = {
       id,
-      name,
-      email: email.toLowerCase(),
+      name: cleanName,
+      email: cleanEmail,
       password: hashedPassword,
       role: role === 'admin' ? 'admin' : 'employee',
       designation: designation || (role === 'admin' ? 'HR Operations Officer' : 'Associate Specialist'),
@@ -45,7 +51,7 @@ router.post('/register', (req, res) => {
       emergencyContact: 'Not specified',
       joiningDate: new Date().toISOString().split('T')[0],
       employmentStatus: 'Active',
-      profilePicture: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name)}`,
+      profilePicture: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(cleanName)}`,
       salaryStructure: {
         basic: 45000,
         hra: 18000,
@@ -84,7 +90,7 @@ router.post('/register', (req, res) => {
       id: `notif-${Date.now()}`,
       recipientId: newEmployee.id,
       title: 'Welcome to Dayflow HRMS!',
-      message: `Hi ${name}, your account is active and verified. Complete your profile and check your dashboard.`,
+      message: `Hi ${cleanName}, your account is active and verified. Complete your profile and check your dashboard.`,
       type: 'welcome',
       read: false,
       timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19)
@@ -102,7 +108,7 @@ router.post('/register', (req, res) => {
     });
   } catch (error) {
     console.error('Registration error:', error);
-    return res.status(500).json({ success: false, message: 'Server error during registration.' });
+    return res.status(500).json({ success: false, message: 'Server error during registration. Please try again.' });
   }
 });
 
@@ -115,17 +121,18 @@ router.post('/login', (req, res) => {
       return res.status(400).json({ success: false, message: 'Email/Employee ID and password are required.' });
     }
 
+    const cleanQuery = String(emailOrId).trim().toLowerCase();
     const employees = db.getCollection('employees');
     const user = employees.find(
-      e => e.email.toLowerCase() === emailOrId.toLowerCase().trim() || 
-           e.id.toLowerCase() === emailOrId.toLowerCase().trim()
+      e => (e && e.email && String(e.email).toLowerCase() === cleanQuery) ||
+           (e && e.id && String(e.id).toLowerCase() === cleanQuery)
     );
 
     if (!user) {
       return res.status(401).json({ success: false, message: 'Invalid credentials. User not found.' });
     }
 
-    const isMatch = bcrypt.compareSync(password, user.password);
+    const isMatch = bcrypt.compareSync(String(password), user.password);
     if (!isMatch) {
       return res.status(401).json({ success: false, message: 'Incorrect password. Please try again.' });
     }
@@ -141,7 +148,7 @@ router.post('/login', (req, res) => {
     });
   } catch (error) {
     console.error('Login error:', error);
-    return res.status(500).json({ success: false, message: 'Server error during login.' });
+    return res.status(500).json({ success: false, message: 'Server error during login. Please try again.' });
   }
 });
 

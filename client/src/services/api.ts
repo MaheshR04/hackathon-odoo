@@ -22,19 +22,26 @@ const buildQuery = (params?: Record<string, any>) => {
 
 async function request(endpoint: string, options: RequestInit = {}) {
   const url = `${API_BASE}${endpoint}`;
-  const response = await fetch(url, {
-    ...options,
-    headers: {
-      ...getAuthHeaders(),
-      ...(options.headers || {})
-    }
-  });
+  try {
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        ...getAuthHeaders(),
+        ...(options.headers || {})
+      }
+    });
 
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.message || `Request failed with status ${response.status}`);
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || `Request failed with status ${response.status}`);
+    }
+    return data;
+  } catch (err: any) {
+    if (err.message === 'Failed to fetch' || err.name === 'TypeError') {
+      throw new Error('Server connection error. Please verify the backend is active or try again.');
+    }
+    throw err;
   }
-  return data;
 }
 
 export const api = {
