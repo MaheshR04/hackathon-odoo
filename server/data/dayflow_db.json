@@ -552,10 +552,10 @@
       "endDate": "2026-08-23",
       "totalDays": 2,
       "reason": "rain\n",
-      "status": "Pending",
-      "adminComments": "",
+      "status": "Rejected",
+      "adminComments": "Rejected by HR Operations.",
       "appliedAt": "2026-08-22 07:27:33",
-      "reviewedAt": null
+      "reviewedAt": "2026-08-22 07:39:41"
     },
     {
       "id": "leave-1787383311842",
@@ -739,6 +739,15 @@
     }
   ],
   "notifications": [
+    {
+      "id": "notif-1787384381175",
+      "recipientId": "EMP-001",
+      "title": "Leave Request Rejected",
+      "message": "Your Paid Leave (2026-08-22 to 2026-08-23) has been rejected by HR. Remarks: \"Rejected by HR Operations.\"",
+      "type": "leave_rejected",
+      "read": false,
+      "timestamp": "2026-08-22 07:39:41"
+    },
     {
       "id": "notif-1787383653979-EMP-001",
       "recipientId": "EMP-001",
